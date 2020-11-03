@@ -41,7 +41,8 @@ app.put("/repositories/:id", (request, response) => {
     id,
     title,
     url,
-    techs
+    techs,
+    likes: repositories[repositoryIndex].likes
   }
 
   // Atribuindo o novo repositorio a posicao do array correspondente
@@ -67,7 +68,20 @@ app.delete("/repositories/:id", (request, response) => {
 });
 
 app.post("/repositories/:id/like", (request, response) => {
-  // TODO
+
+  const { id } = request.params;
+
+  const repository = repositories.find(repository => repository.id === id)
+
+  console.log(repository);
+
+  if (repository == undefined)
+    return response.status(400).json({ error: "Repository not found" });
+
+  repository.likes += 1
+
+  response.json(repository)
+
 });
 
 module.exports = app;

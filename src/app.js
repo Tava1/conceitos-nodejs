@@ -10,6 +10,16 @@ app.use(cors());
 
 const repositories = [];
 
+function findRepository(id) {
+  const repository = repositories.find(repository => repository.id === id)
+  return repository;
+}
+
+function findRepositoryByIndex(id) {
+  const repositoryIndex = repositories.findIndex(repository => repository.id === id)
+  return repositoryIndex;
+}
+
 app.get("/repositories", (request, response) => {
   response.json(repositories);
 });
@@ -32,7 +42,7 @@ app.put("/repositories/:id", (request, response) => {
   const { title, url, techs } = request.body;
 
   // buscar o repositorio no array, findIndex para retornar a posicao do elemento no array.
-  const repositoryIndex = repositories.findIndex(repository => repository.id === id)
+  const repositoryIndex = findRepositoryByIndex(id)
 
   if (repositoryIndex < 0)
     return response.status(400).json({ error: 'Repository not found.' });
@@ -55,7 +65,7 @@ app.delete("/repositories/:id", (request, response) => {
   const { id } = request.params;
 
   // Buscando o repositorio no array pelo ID especificado
-  const repositoryIndex = repositories.findIndex(repository => repository.id === id);
+  const repositoryIndex = findRepositoryByIndex(id);
 
   if (repositoryIndex < 0)
     return response.status(400).json({ error: 'Repository not found.' });
@@ -68,12 +78,9 @@ app.delete("/repositories/:id", (request, response) => {
 });
 
 app.post("/repositories/:id/like", (request, response) => {
-
   const { id } = request.params;
 
-  const repository = repositories.find(repository => repository.id === id)
-
-  console.log(repository);
+  const repository = findRepository(id);
 
   if (repository == undefined)
     return response.status(400).json({ error: "Repository not found" });
